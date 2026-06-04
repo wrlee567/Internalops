@@ -5,7 +5,7 @@ import { AlertTriangle, Plus, Search, X, Save } from 'lucide-react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { MOCK_THREATS, MOCK_CPIS } from '@/lib/mockData';
 import { riskColor, statusColor, generateId, formatDate, deriveRiskLevel } from '@/lib/utils';
-import type { ThreatAssessment, CPI } from '@/lib/types';
+import type { ThreatAssessment } from '@/lib/types';
 
 const BLANK: Omit<ThreatAssessment, 'id' | 'riskLevel'> = {
   cpiId: '', threatActor: '', threatCategory: 'Foreign Intelligence',
@@ -134,14 +134,14 @@ export default function ThreatAssessments() {
             {filtered.length === 0
               ? <tr><td colSpan={9} className="px-4 py-8 text-center text-slate-500 text-sm">No threats match the filters.</td></tr>
               : filtered.map((t) => {
-                const cpi = cpis.find((c: { id: string }) => c.id === t.cpiId);
+                const cpi = cpis.find((c) => c.id === t.cpiId);
                 return (
                   <tr key={t.id} className="hover:bg-slate-800/30 transition-colors">
                     <td className="px-3 py-3 text-xs text-slate-300 max-w-[200px]">
                       <div className="truncate" title={t.threatActor}>{t.threatActor}</div>
                     </td>
                     <td className="px-3 py-3 text-xs text-slate-400 whitespace-nowrap">{t.threatCategory}</td>
-                    <td className="px-3 py-3 text-xs font-mono text-blue-400">{(cpi as { programName: string })?.programName ?? '—'}</td>
+                    <td className="px-3 py-3 text-xs font-mono text-blue-400">{cpi?.programName ?? '—'}</td>
                     <td className={`px-3 py-3 text-xs font-medium ${PROB_COLOR[t.probability]}`}>{t.probability}</td>
                     <td className={`px-3 py-3 text-xs font-medium ${PROB_COLOR[t.impact]}`}>{t.impact}</td>
                     <td className="px-3 py-3">
@@ -210,7 +210,7 @@ export default function ThreatAssessments() {
               <Field label="Linked CPI *">
                 <select value={form.cpiId} onChange={(e) => setForm((p) => ({ ...p, cpiId: e.target.value }))} className={inputCls}>
                   <option value="">— Select CPI —</option>
-                  {cpis.map((c: CPI) => <option key={c.id} value={c.id}>{c.programName} — {c.cpiName}</option>)}
+                  {cpis.map((c) => <option key={c.id} value={c.id}>{c.programName} — {c.cpiName}</option>)}
                 </select>
               </Field>
               <Field label="Threat Actor *">
